@@ -59,9 +59,8 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
-    // Media
-    implementation(libs.exoplayer.core)
-    implementation(libs.exoplayer.ui)
+    // ViewBinding
+    implementation(libs.vbpd)
 
     // Test
     testImplementation(libs.junit)

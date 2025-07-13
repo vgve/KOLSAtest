@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="type_all">Все</string>
+    <string name="type_workout">Тренировка</string>
+    <string name="type_live">Эфир</string>
+    <string name="type_complex">Комплекс</string>
+    <string name="type_unknown">Неизвестно</string>
+
+    <string name="duration_minutes">%s минут(ы)</string>
+
+    <string name="empty_list_title">Ooops</string>
+    <string name="empty_list_subtitle">Список тренировок пуст</string>
+</resources>

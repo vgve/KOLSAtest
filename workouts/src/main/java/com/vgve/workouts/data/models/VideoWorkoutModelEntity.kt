@@ -1,9 +1,9 @@
 package com.vgve.workouts.data.models
 
 import com.google.gson.annotations.SerializedName
-import com.vgve.workouts.domain.models.WorkoutVideoModel
+import com.vgve.workouts.domain.models.VideoWorkoutModel
 
-data class WorkoutVideoModelEntity(
+data class VideoWorkoutModelEntity(
     @SerializedName("id")
     val id: Int?,
     @SerializedName("duration")
@@ -12,7 +12,7 @@ data class WorkoutVideoModelEntity(
     val link: String?
 )
 
-internal fun WorkoutVideoModelEntity.toDomain() = WorkoutVideoModel(
+internal fun VideoWorkoutModelEntity.toDomain() = VideoWorkoutModel(
     id = id ?: -1,
     duration = duration.orEmpty(),
     link = link.orEmpty()

@@ -17,12 +17,13 @@ okhttp = "4.12.0"
 gson = "2.13.1"
 constraintlayout = "2.2.1"
 navigationFragment = "2.9.1"
-exoplayer = "2.22.0"
+exoplayer = "2.19.1"
 
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 material = "1.12.0"
+vbpd = "2.0.4"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -55,6 +56,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 exoplayer-core = { group = "com.google.android.exoplayer", name = "exoplayer-core", version.ref = "exoplayer" }
 exoplayer-ui = { group = "com.google.android.exoplayer", name = "exoplayer-ui", version.ref = "exoplayer" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+vbpd = { module = "dev.androidbroadcast.vbpd:vbpd", version.ref = "vbpd" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

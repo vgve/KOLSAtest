@@ -12,25 +12,22 @@ data class WorkoutModelEntity(
     @SerializedName("description")
     val description: String?,
     @SerializedName("type")
-    val type: WorkoutTypeEntity?,
+    val type: Int?,
     @SerializedName("duration")
     val duration: String?
 )
 
-enum class WorkoutTypeEntity{
-    Workout, Live, Complex
-}
-
-internal fun WorkoutTypeEntity.toDomain() = when(this) {
-    WorkoutTypeEntity.Workout -> WorkoutType.Workout
-    WorkoutTypeEntity.Live -> WorkoutType.Live
-    WorkoutTypeEntity.Complex -> WorkoutType.Complex
+internal fun Int.typeToDomain() = when(this) {
+    1 -> WorkoutType.Workout
+    2 -> WorkoutType.Live
+    3 -> WorkoutType.Complex
+    else -> WorkoutType.Unknown
 }
 
 internal fun WorkoutModelEntity.toDomain() = WorkoutModel(
-    id = id ?: -1,
-    title = title.orEmpty(),
+    id = id ?: throw IllegalArgumentException("Id field is null"),
+    title = title?.takeIf { it.isNotBlank() } ?: throw IllegalArgumentException("Title field is null"),
     description = description.orEmpty(),
-    type = type?.toDomain(),
-    duration = duration.orEmpty()
+    type = type?.typeToDomain() ?: WorkoutType.Unknown,
+    duration = duration?.takeIf { it.isNotBlank() } ?: throw IllegalArgumentException("Duration field is null")
 )
