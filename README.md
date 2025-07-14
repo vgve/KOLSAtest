@@ -1,7 +1,7 @@
 # Тестовое задание от kolsanovafit
 
 ## Стэк
-- Kotlin
+- Kotlin, ViewModel, Coroutines
 - XML, Fragments, ViewBinding
 - RecyclerView, AdapterDelegates
 - Retrofit, OkHttp, Gson
@@ -9,22 +9,21 @@
 - ExoPlayer
 
 ## Скриншоты
-![image](https://raw.github.com/vgve/KOLSAtest/master/screenshots/first_screen.jpg)
-![image](https://raw.github.com/vgve/KOLSAtest/master/screenshots/second_screen.jpg)
+<img src="https://raw.github.com/vgve/KOLSAtest/master/screenshots/first_screen.jpg" alt="Screenshot-20220921-133949" border="10" height="500px">
+<img src="https://raw.github.com/vgve/KOLSAtest/master/screenshots/second_screen.jpg" alt="Screenshot-20220921-133949" border="10" height="500px">
 
 ## Модульная структура проекта
 
 Проект разделен на три модуля с использованием Clean Architecture.
 ### 🧠 core модуль
 - Сетевой слой:
-    - Инициализация Retrofit
-    - Базовые функции для работы с API
-    - Общие модели данных и interceptors
+    - Инициализация OkHttp и Retrofit
+    - Общие утилиты
 
 ### ▶️ player модуль
 - Медиа:
     - Singleton-обертка над ExoPlayer
-    - Централизованное управление состоянием плеера
+    - Централизованное управление плеером
 
 ### 💪 workouts модуль (feature-модуль)
 - Фича тренировок:
