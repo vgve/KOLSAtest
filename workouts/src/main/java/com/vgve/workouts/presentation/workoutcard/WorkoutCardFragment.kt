@@ -2,11 +2,9 @@ package com.vgve.workouts.presentation.workoutcard
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.media3.ui.TrackSelectionDialogBuilder
 import androidx.navigation.fragment.findNavController
 import com.vgve.workouts.R
 import com.vgve.workouts.databinding.FragmentWorkoutCardBinding
@@ -28,12 +26,6 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
 
     private val binding: FragmentWorkoutCardBinding by viewBinding(FragmentWorkoutCardBinding::bind)
     private val viewModel: WorkoutCardViewModel by viewModels()
-
-//    private val clControls: ImageView by lazy { binding.pvWorkout.findViewById(R.id.cl_controls) }
-//    private val ivRewind: ImageView by lazy { binding.pvWorkout.findViewById(R.id.iv_rewind) }
-//    private val ivPlay: ImageView by lazy { binding.pvWorkout.findViewById(R.id.iv_play) }
-//    private val ivForward: ImageView by lazy { binding.pvWorkout.findViewById(R.id.iv_forward) }
-//    private val ivSettings: ImageView by lazy { binding.pvWorkout.findViewById(R.id.iv_settings) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,26 +61,6 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
                 uiState.player?.let {
                     pvWorkout.player = it
                 }
-//                ivRewind.setOnClickListener {
-//                    viewModel.onRewind()
-//                }
-//                ivForward.setOnClickListener {
-//                    viewModel.onForward()
-//                }
-//                ivPlay.apply {
-//                    val icon = if (uiState.playerState?.isPlayWhenReady == true) {
-//                        R.drawable.ic_pause
-//                    } else {
-//                        R.drawable.ic_play
-//                    }
-//                    setImageResource(icon)
-//                    setOnClickListener {
-//                        viewModel.onPlay()
-//                    }
-//                }
-//                ivSettings.setOnClickListener {
-//
-//                }
             }
         }.collectOnStarted(this)
     }

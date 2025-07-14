@@ -6,8 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.exoplayer.ExoPlayer
-import com.vgve.workouts.data.service.PlayerModel
-import com.vgve.workouts.domain.VideoPlayerService
+import com.vgve.player.domain.PlayerModel
+import com.vgve.player.domain.VideoPlayerService
 import com.vgve.workouts.domain.models.VideoWorkoutModel
 import com.vgve.workouts.domain.models.WorkoutModel
 import com.vgve.workouts.domain.usecases.GetWorkoutVideoUseCase
@@ -88,14 +88,6 @@ class WorkoutCardViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         videoPlayerService.clearAndStop()
-    }
-
-    fun onRewind() { videoPlayerService.rewind() }
-
-    fun onForward() { videoPlayerService.forward() }
-
-    fun onPlay() {
-        videoPlayerService.onClickPlay()
     }
 
     data class UIState(

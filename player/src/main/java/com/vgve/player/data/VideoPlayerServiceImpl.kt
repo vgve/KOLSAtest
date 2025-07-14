@@ -1,4 +1,4 @@
-package com.vgve.workouts.data.service
+package com.vgve.player.data
 
 import android.content.Context
 import androidx.media3.common.MediaItem
@@ -6,7 +6,8 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import com.vgve.workouts.domain.VideoPlayerService
+import com.vgve.player.domain.PlayerModel
+import com.vgve.player.domain.VideoPlayerService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -125,21 +126,6 @@ class VideoPlayerServiceImpl @Inject constructor(
         )
     }
 
-    override fun onClickPlay() {
-        if (player.playWhenReady) {
-            player.pause()
-            player.playWhenReady = false
-        } else {
-            player.play()
-            player.playWhenReady = true
-        }
-        _playerState.update {
-            it.copy(
-                isPlayWhenReady = player.playWhenReady
-            )
-        }
-    }
-
     override fun mute() {
         player.volume = if (isMute()) {
             1f
@@ -162,7 +148,3 @@ class VideoPlayerServiceImpl @Inject constructor(
         }
     }
 }
-
-data class PlayerModel(
-    val isPlayWhenReady: Boolean = false
-)

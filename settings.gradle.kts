@@ -25,3 +25,4 @@ rootProject.name = "KOLSAtest"
 include(":app")
 include(":core")
 include(":workouts")
+include(":player")

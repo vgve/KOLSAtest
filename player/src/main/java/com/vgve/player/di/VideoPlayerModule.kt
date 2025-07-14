@@ -1,7 +1,7 @@
-package com.vgve.workouts.di
+package com.vgve.player.di
 
-import com.vgve.workouts.data.service.VideoPlayerServiceImpl
-import com.vgve.workouts.domain.VideoPlayerService
+import com.vgve.player.data.VideoPlayerServiceImpl
+import com.vgve.player.domain.VideoPlayerService
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

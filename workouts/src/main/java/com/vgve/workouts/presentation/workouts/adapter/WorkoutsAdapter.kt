@@ -5,7 +5,6 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.vgve.workouts.R
 import com.vgve.workouts.databinding.ItemWorkoutBinding
 import com.vgve.workouts.domain.models.WorkoutModel
-import com.vgve.workouts.domain.models.WorkoutType
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.vgve.workouts.domain.models.toResString

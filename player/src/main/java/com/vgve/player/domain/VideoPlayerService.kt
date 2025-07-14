@@ -1,7 +1,6 @@
-package com.vgve.workouts.domain
+package com.vgve.player.domain
 
 import androidx.media3.exoplayer.ExoPlayer
-import com.vgve.workouts.data.service.PlayerModel
 import kotlinx.coroutines.flow.StateFlow
 
 interface VideoPlayerService {
@@ -22,5 +21,4 @@ interface VideoPlayerService {
     fun forward()
     fun rewind(seekDuration: Int)
     fun forward(seekDuration: Int)
-    fun onClickPlay()
 }
