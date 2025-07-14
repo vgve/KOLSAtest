@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_controls"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#50000000">
+
+    <ImageView
+        android:id="@+id/iv_play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_play"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_forward"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_forward"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_play" />
+
+    <ImageView
+        android:id="@+id/iv_rewind"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_rewind"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_play"
+        app:layout_constraintEnd_toStartOf="@+id/iv_play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_play" />
+
+    <LinearLayout
+        android:id="@+id/ll_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/exo_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="00:00" />
+
+        <androidx.media3.ui.DefaultTimeBar
+            android:id="@+id/exo_progress_placeholder"
+            android:layout_width="0dp"
+            android:layout_height="18dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/exo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="00:00" />
+
+        <ImageView
+            android:id="@+id/iv_settings"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_settings"
+            app:tint="?android:attr/textColorPrimary" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

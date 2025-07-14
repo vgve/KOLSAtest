@@ -15,7 +15,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("String", "BASE_URL", "\"http://ref.test.kolsa.ru/\"")
+        buildConfigField("String", "BASE_URL", "\"https://ref.test.kolsa.ru/\"")
     }
 
     buildTypes {

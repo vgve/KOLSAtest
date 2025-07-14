@@ -16,6 +16,8 @@ import androidx.navigation.fragment.findNavController
 import com.vgve.core.utils.extensions.navigateSafe
 import com.vgve.workouts.domain.models.WorkoutType
 import com.vgve.workouts.presentation.utils.extensions.collectOnStarted
+import com.vgve.workouts.presentation.utils.extensions.showBottomSheet
+import com.vgve.workouts.presentation.workoutcard.WorkoutCardViewModel
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
@@ -27,7 +29,7 @@ class WorkoutsFragment: Fragment(R.layout.fragment_workouts) {
     private val workoutsAdapter by lazy {
         WorkoutsAdapter(
             onClick = {
-                viewModel.onClickWorkout(it.id)
+                viewModel.onClickWorkout(it)
             }
         )
     }
@@ -72,6 +74,10 @@ class WorkoutsFragment: Fragment(R.layout.fragment_workouts) {
                 llEmpty.apply {
                     llEmpty.isVisible = uiState.workouts.isEmpty() && !uiState.isLoading
                 }
+
+                // Progress bar
+                clMain.isVisible = !uiState.isLoading
+                pbWorkouts.isVisible = uiState.isLoading
             }
         }.collectOnStarted(this)
     }
@@ -79,11 +85,21 @@ class WorkoutsFragment: Fragment(R.layout.fragment_workouts) {
     private fun observeUIAction() {
         viewModel.uiAction.onEach { uiAction ->
             when (uiAction) {
-                is WorkoutsViewModel.UIAction.OnFailure -> { }
+                is WorkoutsViewModel.UIAction.OnFailure -> {
+                    showBottomSheet(
+                        title = getString(R.string.common_error_title),
+                        subTitle = getString(R.string.common_error_subtitle),
+                        btnTitle = getString(R.string.common_error_btn),
+                        btnClick = { viewModel.initScreen() },
+                        cancelable = false
+                    )
+                }
                 is WorkoutsViewModel.UIAction.OnClickWorkout -> {
                     findNavController().navigateSafe(
                         R.id.action_workoutsFragment_to_workoutCardFragment,
-                        bundleOf()
+                        bundleOf(
+                            WorkoutCardViewModel.KEY_ARGS_WORKOUT to uiAction.workout
+                        )
                     )
                 }
             }

@@ -32,6 +32,10 @@ class WorkoutsViewModel @Inject constructor(
     private var workouts = emptyList<WorkoutModel>()
 
     init {
+        initScreen()
+    }
+    
+    fun initScreen() {
         launchSafe(
             errorHandler = { exception ->
                 Log.e(TAG, "$exception")
@@ -45,10 +49,10 @@ class WorkoutsViewModel @Inject constructor(
         ).track { _uiState.update { uiState -> uiState.copy(isLoading = it) } }
     }
 
-    fun onClickWorkout(it: Int) {
+    fun onClickWorkout(workout: WorkoutModel) {
         viewModelScope.launch {
             _uiAction.send(
-                UIAction.OnClickWorkout(it)
+                UIAction.OnClickWorkout(workout)
             )
         }
     }
@@ -84,7 +88,7 @@ class WorkoutsViewModel @Inject constructor(
     )
 
     sealed class UIAction {
-        data class OnClickWorkout(val id: Int): UIAction()
+        data class OnClickWorkout(val workout: WorkoutModel): UIAction()
         data object OnFailure : UIAction()
     }
 }

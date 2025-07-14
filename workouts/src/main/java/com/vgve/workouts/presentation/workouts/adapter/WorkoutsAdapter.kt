@@ -8,6 +8,7 @@ import com.vgve.workouts.domain.models.WorkoutModel
 import com.vgve.workouts.domain.models.WorkoutType
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import com.vgve.workouts.domain.models.toResString
 import com.vgve.workouts.presentation.utils.extensions.isInteger
 
 class WorkoutsDiffUtil: DiffUtil.ItemCallback<WorkoutModel>() {
@@ -46,11 +47,4 @@ fun workoutsAdapterDelegate(
             }
         }
     }
-}
-
-internal fun WorkoutType.toResString() = when(this) {
-    WorkoutType.Workout -> R.string.type_workout
-    WorkoutType.Live -> R.string.type_complex
-    WorkoutType.Complex -> R.string.type_complex
-    WorkoutType.Unknown -> R.string.type_unknown
 }

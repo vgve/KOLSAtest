@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/design_default_color_background"
+    android:background="?android:attr/windowBackground"
     android:gravity="center">
 
     <TextView
@@ -17,7 +17,7 @@
         android:layout_marginBottom="4dp"
         android:gravity="center"
         android:text="@string/empty_list_title"
-        android:textColor="@color/design_default_color_on_secondary"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="32sp"/>
 
     <TextView
@@ -28,6 +28,6 @@
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="@string/empty_list_subtitle"
-        android:textColor="@color/design_default_color_on_secondary"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"/>
 </LinearLayout>

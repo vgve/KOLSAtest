@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -64,7 +65,11 @@ dependencies {
     implementation(libs.vbpd)
 
     // Delegates
-    implementation("com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.2")
+    implementation(libs.adapterdelegates4.kotlin.dsl.viewbinding)
+
+    // ExoPlayer
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
 
     // Test
     testImplementation(libs.junit)
