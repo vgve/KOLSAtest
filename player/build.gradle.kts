@@ -32,13 +32,12 @@ android {
 }
 
 dependencies {
+    // ExoPlayer
+    api(libs.androidx.media3.exoplayer)
 
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
-    // ExoPlayer
-    implementation(libs.androidx.media3.exoplayer)
 
     // Tests
     testImplementation(libs.junit)

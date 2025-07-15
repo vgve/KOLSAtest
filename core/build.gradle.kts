@@ -38,14 +38,10 @@ android {
 
 dependencies {
     // Network
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.logging.interceptor)
-    implementation(libs.gson)
-
-    // Navigation
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
+    api(libs.retrofit)
+    api(libs.retrofit.converter.gson)
+    api(libs.logging.interceptor)
+    api(libs.gson)
 
     // Hilt
     implementation(libs.hilt.android)

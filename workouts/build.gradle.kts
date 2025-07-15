@@ -58,15 +58,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    // Network
-    implementation(libs.retrofit)
-    implementation(libs.gson)
-
     // ViewBinding
     implementation(libs.vbpd)
 
-    // ExoPlayer
-    implementation(libs.androidx.media3.exoplayer)
+    // ExoPlayer UI
     implementation(libs.androidx.media3.ui)
 
     // Delegates
