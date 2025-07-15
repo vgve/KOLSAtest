@@ -58,8 +58,11 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
                 pbWorkoutCard.isVisible = uiState.isLoading
 
                 // Player
-                uiState.player?.let {
-                    pvWorkout.player = it
+                pvWorkout.apply {
+                    isVisible = !uiState.isLoading
+                    uiState.player?.let {
+                        player = it
+                    }
                 }
             }
         }.collectOnStarted(this)

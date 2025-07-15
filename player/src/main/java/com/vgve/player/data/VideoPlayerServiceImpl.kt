@@ -59,10 +59,6 @@ class VideoPlayerServiceImpl @Inject constructor(
         val mediaItem = MediaItem.fromUri(link)
         player.apply {
             // repeatMode = Player.REPEAT_MODE_ONE
-            trackSelectionParameters.buildUpon()
-                .setMaxVideoSize(1920, 1080)
-                .setMinVideoSize(-1, 360)
-                .build()
             setMediaItem(mediaItem)
             prepare()
         }

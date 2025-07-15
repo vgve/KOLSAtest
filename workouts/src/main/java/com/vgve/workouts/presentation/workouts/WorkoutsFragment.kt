@@ -13,7 +13,7 @@ import com.vgve.workouts.presentation.workouts.adapter.WorkoutsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import dev.androidbroadcast.vbpd.viewBinding
 import androidx.navigation.fragment.findNavController
-import com.vgve.core.utils.extensions.navigateSafe
+import com.vgve.workouts.presentation.utils.extensions.navigateSafe
 import com.vgve.workouts.domain.models.WorkoutType
 import com.vgve.workouts.presentation.utils.extensions.collectOnStarted
 import com.vgve.workouts.presentation.utils.extensions.showBottomSheet

@@ -1,4 +1,4 @@
-package com.vgve.core.utils.extensions
+package com.vgve.workouts.presentation.utils.extensions
 
 import android.os.Bundle
 import androidx.annotation.IdRes
