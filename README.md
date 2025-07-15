@@ -1,33 +1,50 @@
-# Тестовое задание от kolsanovafit
+# Fitness App for Kolsanovafit
 
-## Стэк
-- Kotlin, ViewModel, Coroutines
-- XML, Fragments, ViewBinding
-- RecyclerView, AdapterDelegates
-- Retrofit, OkHttp, Gson
-- Hilt
-- ExoPlayer
+## 📱 Project Overview
+A clean architecture Android application showcasing workout videos with seamless playback experience. This implementation demonstrates modern Android development best practices and modular app architecture.
 
-## Скриншоты
-<img src="https://raw.github.com/vgve/KOLSAtest/master/screenshots/first_screen.jpg" alt="Screenshot-20220921-133949" border="10" height="500px">
-<img src="https://raw.github.com/vgve/KOLSAtest/master/screenshots/second_screen.jpg" alt="Screenshot-20220921-133949" border="10" height="500px">
+## 🛠 Tech Stack
+### Core Technologies
+- Language: Kotlin
+- Architecture: Clean Architecture + MVI, Single Activity
+- DI: Dagger Hilt
+- Async: Kotlin Coroutines & Flow 
+### UI Layer
+- Views: XML, Fragments, Navigation Component
+- Binding: ViewBinding, ViewBindingPropertyDelegate
+- Lists: RecyclerView, AdapterDelegates, DiffUtil
+### Network & Media
+- HTTP: REST API, Retrofit + OkHttp
+- Serialization: Gson
+- Video: Media 3 ExoPlayer (custom wrapper)
 
-## Модульная структура проекта
+## 📸 Screenshots
+<div style="display: flex; gap: 10px;"> 
+  <img src="https://raw.github.com/vgve/KOLSAtest/master/screenshots/mockup_light.png" alt="Light Theme Screens" border="10" height="800px"> 
+</div>
 
-Проект разделен на три модуля с использованием Clean Architecture.
-### 🧠 core модуль
-- Сетевой слой:
-    - Инициализация OkHttp и Retrofit
-    - Общие утилиты
+## 🏗 Modular Architecture
 
-### ▶️ player модуль
-- Медиа:
-    - Singleton-обертка над ExoPlayer
-    - Централизованное управление плеером
+The project follows Clean Architecture principles with three distinct modules:
+### 🧠 Core Module
+The foundation module containing shared infrastructure:
+ - Network layer:
+ - OkHttp client configuration 
+ - Retrofit instance creation
+ - Utilities: Shared extensions
 
-### 💪 workouts модуль (feature-модуль)
-- Фича тренировок:
-    - Экран списка тренировок
-    - Экран детализации тренировки:
-        - Информация
-        - Видеоплеер (использует player модуль)
+### ▶️ Player Module
+Dedicated media handling module:
+- ExoPlayer wrapper: Singleton implementation
+- Centralized playback control
+- Lifecycle-aware player management
+
+### 💪 Workouts Feature Module
+The main feature module containing:
+- Workout list screen:
+  - Fetching and displaying workout collection 
+  - Smooth scrolling performance
+- Workout detail screen:
+  - Comprehensive workout information
+  - Integrated video player (utilizing Player module)
+  - State preservation during configuration changes
