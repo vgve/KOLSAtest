@@ -5,7 +5,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import com.vgve.player.domain.PlayerModel
 import com.vgve.player.domain.VideoPlayerService
 import com.vgve.workouts.domain.models.VideoWorkoutModel
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+@UnstableApi
 class WorkoutCardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getWorkoutVideoUseCase: GetWorkoutVideoUseCase,
@@ -63,7 +65,7 @@ class WorkoutCardViewModel @Inject constructor(
                 )
             }
             uiState.value.videoWorkout?.link?.let {
-                videoPlayerService.setMedia(it)
+                videoPlayerService.setMedia(false, it)
             }
             observeVideoPlayer(videoPlayerService.playerState)
         }.track { _uiState.update { uiState -> uiState.copy(isLoading = it) } }
@@ -77,9 +79,10 @@ class WorkoutCardViewModel @Inject constructor(
         }
     }
 
-    fun onStopVideo() {
-        videoPlayerService.stop()
-    }
+    fun onRewind() = videoPlayerService.rewind()
+    fun onForward() = videoPlayerService.forward()
+    fun onPlay() = videoPlayerService.resume()
+    fun onPause() = videoPlayerService.pause()
 
     fun restoreSettings(position: Long, isReady: Boolean) {
         videoPlayerService.restoreSettings(position, isReady)
@@ -87,14 +90,14 @@ class WorkoutCardViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        videoPlayerService.clearAndStop()
+        videoPlayerService.release()
     }
 
     data class UIState(
         val isLoading: Boolean = false,
         val workout: WorkoutModel? = null,
         val videoWorkout: VideoWorkoutModel? = null,
-        val player: ExoPlayer? = null,
+        val player: Player? = null,
         val playerState: PlayerModel? = null
     )
 

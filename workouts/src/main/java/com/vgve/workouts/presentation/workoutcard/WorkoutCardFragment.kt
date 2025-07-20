@@ -2,9 +2,13 @@ package com.vgve.workouts.presentation.workoutcard
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.fragment.findNavController
 import com.vgve.workouts.R
 import com.vgve.workouts.databinding.FragmentWorkoutCardBinding
@@ -16,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.flow.onEach
 
-@AndroidEntryPoint
+@AndroidEntryPoint @UnstableApi
 class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
 
     companion object {
@@ -26,6 +30,11 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
 
     private val binding: FragmentWorkoutCardBinding by viewBinding(FragmentWorkoutCardBinding::bind)
     private val viewModel: WorkoutCardViewModel by viewModels()
+
+    private val ivPlay: ImageView by lazy { binding.pvWorkout.findViewById(com.vgve.player.R.id.iv_play) }
+    private val ivRewind: ImageView by lazy { binding.pvWorkout.findViewById(com.vgve.player.R.id.iv_rewind) }
+    private val ivForward: ImageView by lazy { binding.pvWorkout.findViewById(com.vgve.player.R.id.iv_forward) }
+    private val ivSettings: ImageView by lazy { binding.pvWorkout.findViewById(com.vgve.player.R.id.iv_settings) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,6 +73,26 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
                         player = it
                     }
                 }
+
+                ivPlay.apply {
+                    val image =
+                        if (uiState.playerState?.isPlaying == true) com.vgve.player.R.drawable.ic_pause
+                        else com.vgve.player.R.drawable.ic_play
+                    setImageResource(image)
+                    setOnClickListener {
+                        if (uiState.playerState?.isPlaying == true) viewModel.onPause()
+                        else viewModel.onPlay()
+                    }
+                }
+                ivForward.setOnClickListener {
+                    viewModel.onForward()
+                }
+                ivRewind.setOnClickListener {
+                    viewModel.onRewind()
+                }
+                ivSettings.setOnClickListener {
+
+                }
             }
         }.collectOnStarted(this)
     }
@@ -86,12 +115,12 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
 
     override fun onStop() {
         super.onStop()
-        viewModel.onStopVideo()
+        viewModel.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putLong(KEY_PLAYER_POSITION, viewModel.uiState.value.player?.currentPosition ?: 0L)
-        outState.putBoolean(KEY_PLAYER_PLAY_WHEN_READY, viewModel.uiState.value.playerState?.isPlayWhenReady ?: false)
+        outState.putLong(KEY_PLAYER_POSITION, viewModel.uiState.value.playerState?.currentPosition ?: 0L)
+        outState.putBoolean(KEY_PLAYER_PLAY_WHEN_READY, viewModel.uiState.value.playerState?.isPlaying ?: false)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -106,6 +135,6 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.onStopVideo()
+        viewModel.onPause()
     }
 }
