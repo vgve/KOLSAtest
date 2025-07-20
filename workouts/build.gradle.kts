@@ -40,6 +40,7 @@ dependencies {
     implementation(projects.core)
     implementation(projects.player)
 
+    // AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.androidx.appcompat)

@@ -29,18 +29,23 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+    // Modules
+    implementation(projects.core)
+
+    // ConstraintLayout
+    implementation(libs.androidx.constraintlayout)
+
     // ExoPlayer
     api(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
 
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
-    // Tests
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
