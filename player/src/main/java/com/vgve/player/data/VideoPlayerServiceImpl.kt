@@ -10,7 +10,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.vgve.core.di.MainScope
 import com.vgve.player.domain.PlayerModel
-import com.vgve.player.domain.PlayerState
+import com.vgve.player.domain.Speed
 import com.vgve.player.domain.VideoPlayerService
 import com.vgve.player.domain.VideoQuality
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -90,13 +90,14 @@ class VideoPlayerServiceImpl @Inject constructor(
         player.playWhenReady = true
     }
 
-    override fun rewind() {
-        player.seekBack()
+    override fun replay() {
+        player.seekTo(0)
+        resume()
     }
 
-    override fun forward() {
-        player.seekForward()
-    }
+    override fun rewind() = player.seekBack()
+
+    override fun forward() = player.seekForward()
 
     override fun rewind(seekDuration: Int) {
         player.seekTo(
@@ -112,23 +113,18 @@ class VideoPlayerServiceImpl @Inject constructor(
         )
     }
 
-    override fun setPlaybackSpeed(speed: Float) {
-        player.setPlaybackSpeed(speed)
-    }
+    override fun setPlaybackSpeed(speed: Speed) = player.setPlaybackSpeed(speed.value)
 
     private fun isMute() = player.volume == 0F
     override fun mute() {
         player.volume = if (isMute()) 1f else 0f
     }
 
-    override fun restoreSettings(position: Long, isReady: Boolean) {
-        player.seekTo(position)
+    override fun restore(isReady: Boolean) {
         player.playWhenReady = isReady
     }
 
-    override fun release() {
-        player.release()
-    }
+    override fun release() = player.release()
 
     // Player.Listener implementation
     private inner class PlayerListener : Player.Listener {
@@ -141,31 +137,30 @@ class VideoPlayerServiceImpl @Inject constructor(
         }
         override fun onPlaybackStateChanged(state: Int) {
             updateStateJob?.cancel()
-            if (state == Player.STATE_READY) {
-                updateStateJob = coroutineScope.launch {
-                    while (true) {
-                        _playerState.update {
-                            it.copy(
-                                currentPosition = player.currentPosition,
-                                bufferedPosition = player.bufferedPosition,
-                                isPlaying = player.isPlaying,
-                                duration = player.duration,
-                            )
+            when (state) {
+                Player.STATE_READY -> {
+                    updateStateJob = coroutineScope.launch {
+                        while (true) {
+                            _playerState.update {
+                                it.copy(
+                                    currentPosition = player.currentPosition,
+                                    bufferedPosition = player.bufferedPosition,
+                                    isPlaying = player.isPlaying,
+                                    duration = player.duration,
+                                    isMute = isMute(),
+                                    isEnded = false
+                                )
+                            }
+                            delay(PLAYER_STATE_UPDATE_INTERVAL)
                         }
-                        delay(PLAYER_STATE_UPDATE_INTERVAL)
                     }
                 }
-            }
-            val handleState = when (state) {
-                Player.STATE_READY -> PlayerState.READY
-                Player.STATE_BUFFERING -> PlayerState.BUFFERING
-                Player.STATE_IDLE -> PlayerState.IDLE
                 Player.STATE_ENDED -> {
                     player.playWhenReady = false
-                    _playerState.update { it.copy(isPlaying = false) }
-                    PlayerState.ENDED
+                    _playerState.update { it.copy(isPlaying = false, isEnded = true) }
                 }
-                else -> error("[Media3PlayerHandle] unhandled player state: $state")
+                Player.STATE_BUFFERING -> { }
+                Player.STATE_IDLE -> { }
             }
         }
     }

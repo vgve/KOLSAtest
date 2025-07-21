@@ -3,16 +3,4 @@
     <item
         android:id="@+id/quality_auto"
         android:title="Auto"/>
-    <item
-        android:id="@+id/quality_low"
-        android:title="240p"/>
-    <item
-        android:id="@+id/quality_medium"
-        android:title="480p"/>
-    <item
-        android:id="@+id/quality_high"
-        android:title="720p"/>
-    <item
-        android:id="@+id/quality_highest"
-        android:title="1080p"/>
 </menu>

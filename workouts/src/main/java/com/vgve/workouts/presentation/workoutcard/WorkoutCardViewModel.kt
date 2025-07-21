@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.vgve.player.domain.PlayerModel
+import com.vgve.player.domain.Speed
 import com.vgve.player.domain.VideoPlayerService
+import com.vgve.player.domain.VideoQuality
 import com.vgve.workouts.domain.models.VideoWorkoutModel
 import com.vgve.workouts.domain.models.WorkoutModel
 import com.vgve.workouts.domain.usecases.GetWorkoutVideoUseCase
@@ -83,9 +85,17 @@ class WorkoutCardViewModel @Inject constructor(
     fun onForward() = videoPlayerService.forward()
     fun onPlay() = videoPlayerService.resume()
     fun onPause() = videoPlayerService.pause()
+    fun onMute() = videoPlayerService.mute()
+    fun onReplay() = videoPlayerService.replay()
 
-    fun restoreSettings(position: Long, isReady: Boolean) {
-        videoPlayerService.restoreSettings(position, isReady)
+    fun onRestore(isReady: Boolean) {
+        videoPlayerService.restore(isReady)
+    }
+
+    fun setSpeed(speed: Speed) = videoPlayerService.setPlaybackSpeed(speed)
+
+    fun setQuality(quality: VideoQuality?) {
+        quality?.let { videoPlayerService.selectQuality(it) }
     }
 
     override fun onCleared() {

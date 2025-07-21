@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/speed_slow"
+        android:title="0.5x"/>
+    <item
+        android:id="@+id/speed_normal"
+        android:title="1x"/>
+    <item
+        android:id="@+id/speed_fast"
+        android:title="1.25x"/>
+    <item
+        android:id="@+id/speed_faster"
+        android:title="1.5x"/>
+    <item
+        android:id="@+id/speed_fastest"
+        android:title="2x"/>
+</menu>

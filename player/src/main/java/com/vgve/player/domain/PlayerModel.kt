@@ -8,6 +8,8 @@ data class PlayerModel(
     val availableQualities: List<VideoQuality> = emptyList(),
     val selectedQuality: VideoQuality = VideoQuality.Auto,
     val isLoading: Boolean = false,
+    val isMute: Boolean = false,
+    val isEnded: Boolean = false,
     val error: String? = null
 )
 
@@ -16,6 +18,10 @@ sealed class VideoQuality {
     data class Specific(val width: Int, val height: Int) : VideoQuality()
 }
 
-enum class PlayerState {
-    IDLE, BUFFERING, READY, ENDED
+enum class Speed(val value: Float) {
+    SLOW(0.5f), NORMAL(1f), FAST(1.25f), FASTER(1.5f), FASTEST(2f)
+}
+
+enum class SettingsType {
+    QUALITY, SPEED, SUBTITLES, LANGUAGE
 }
