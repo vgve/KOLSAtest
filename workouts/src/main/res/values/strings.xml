@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Common-->
+    <string name="common_error_title">Ошибка</string>
+    <string name="common_error_subtitle">Что-то пошло не так</string>
+    <string name="common_error_btn">Перезагрузить</string>
+
+    <!--    Types-->
     <string name="type_all">Все</string>
     <string name="type_workout">Тренировка</string>
     <string name="type_live">Эфир</string>
     <string name="type_complex">Комплекс</string>
     <string name="type_unknown">Неизвестно</string>
 
+    <!--    Workout item-->
     <string name="duration_minutes">%s минут(ы)</string>
 
+    <!--    Errors-->
     <string name="empty_list_title">Ooops</string>
     <string name="empty_list_subtitle">Список тренировок пуст</string>
-
-    <string name="common_error_title">Ошибка</string>
-    <string name="common_error_subtitle">Что-то пошло не так</string>
-    <string name="common_error_btn">Перезагрузить</string>
 </resources>

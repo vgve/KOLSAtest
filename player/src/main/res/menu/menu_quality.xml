@@ -2,5 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/quality_auto"
-        android:title="Auto"/>
+        android:title="@string/auto"/>
 </menu>
