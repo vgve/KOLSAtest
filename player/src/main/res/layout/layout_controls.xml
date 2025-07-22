@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/iv_play"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/ic_play"
         app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/iv_replay"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/ic_replay"
         app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
