@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.onEach
 class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
 
     companion object {
-        const val KEY_PLAYER_PLAY_WHEN_READY = "play_when_ready"
+        const val KEY_PLAYER_PLAY_WHEN_READY = "key_play_when_ready"
     }
 
     private val binding: FragmentWorkoutCardBinding by viewBinding(FragmentWorkoutCardBinding::bind)
@@ -49,7 +49,10 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
             }
 
             // Info
-            tvDescription.text = uiState.workout?.description
+            tvDescription.apply {
+                isVisible = !uiState.workout?.description.isNullOrEmpty()
+                text = uiState.workout?.description
+            }
             tvType.text = uiState.workout?.type?.toResString()?.let { getString(it) }
             tvDuration.apply {
                 isVisible = uiState.videoWorkout?.duration?.isInteger() ?: false
@@ -84,6 +87,7 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
                 }
             }
             pvWorkout.mute.apply {
+                isEnabled = uiState.playerState?.isEnded == false
                 pvWorkout.setMuteResource(uiState.playerState?.isMute == true)
                 setOnClickListener {
                     viewModel.onMute()
