@@ -38,10 +38,13 @@ class VideoPlayerServiceImpl @Inject constructor(
     }
 
     private var updateStateJob: Job? = null
-
     private var _player: ExoPlayer? = null
+
     override val player: Player
         get() = requireNotNull(_player) { "Player not initialized" }
+
+    private val _playerState = MutableStateFlow(PlayerModel())
+    override val playerState: StateFlow<PlayerModel> = _playerState.asStateFlow()
 
     private val trackSelector = DefaultTrackSelector(context).apply {
         val parameters = buildUponParameters()
@@ -50,8 +53,43 @@ class VideoPlayerServiceImpl @Inject constructor(
         setParameters(parameters)
     }
 
-    private val _playerState = MutableStateFlow(PlayerModel())
-    override val playerState: StateFlow<PlayerModel> = _playerState.asStateFlow()
+    private val listener = object : Player.Listener {
+        override fun onPlayerErrorChanged(error: PlaybackException?) {
+            _playerState.update { it.copy(error = error?.message) }
+        }
+
+        override fun onPlaybackStateChanged(state: Int) {
+            updateStateJob?.cancel()
+            when (state) {
+                Player.STATE_READY -> {
+                    updateStateJob = coroutineScope.launch {
+                        while (true) {
+                            _playerState.update {
+                                it.copy(
+                                    currentPosition = player.currentPosition,
+                                    bufferedPosition = player.bufferedPosition,
+                                    isPlaying = player.isPlaying,
+                                    duration = player.duration,
+                                    isLoading = false,
+                                    isMute = isMute(),
+                                    isEnded = false
+                                )
+                            }
+                            delay(PLAYER_STATE_UPDATE_INTERVAL)
+                        }
+                    }
+                }
+                Player.STATE_ENDED -> {
+                    player.playWhenReady = false
+                    _playerState.update { it.copy(isPlaying = false, isEnded = true) }
+                }
+                Player.STATE_BUFFERING -> {
+                    _playerState.update { it.copy(isLoading = true) }
+                }
+                Player.STATE_IDLE -> { }
+            }
+        }
+    }
 
     override fun initPlayer() {
         ExoPlayer.Builder(context)
@@ -63,7 +101,7 @@ class VideoPlayerServiceImpl @Inject constructor(
                 _player = it
             }
 
-        player.addListener(PlayerListener())
+        player.addListener(listener)
         _playerState.update {
             it.copy(
                 availableQualities = getResolutions()
@@ -124,45 +162,12 @@ class VideoPlayerServiceImpl @Inject constructor(
         player.playWhenReady = isReady
     }
 
-    override fun release() = player.release()
-
-    // Player.Listener implementation
-    private inner class PlayerListener : Player.Listener {
-        override fun onPlayerErrorChanged(error: PlaybackException?) {
-            _playerState.update {
-                it.copy(
-                    error = error?.message
-                )
-            }
-        }
-        override fun onPlaybackStateChanged(state: Int) {
-            updateStateJob?.cancel()
-            when (state) {
-                Player.STATE_READY -> {
-                    updateStateJob = coroutineScope.launch {
-                        while (true) {
-                            _playerState.update {
-                                it.copy(
-                                    currentPosition = player.currentPosition,
-                                    bufferedPosition = player.bufferedPosition,
-                                    isPlaying = player.isPlaying,
-                                    duration = player.duration,
-                                    isMute = isMute(),
-                                    isEnded = false
-                                )
-                            }
-                            delay(PLAYER_STATE_UPDATE_INTERVAL)
-                        }
-                    }
-                }
-                Player.STATE_ENDED -> {
-                    player.playWhenReady = false
-                    _playerState.update { it.copy(isPlaying = false, isEnded = true) }
-                }
-                Player.STATE_BUFFERING -> { }
-                Player.STATE_IDLE -> { }
-            }
-        }
+    override fun release() {
+        _playerState.update { PlayerModel() }
+        player.removeListener(listener)
+        player.release()
+        _player = null
+        updateStateJob?.cancel()
     }
 
     override fun selectQuality(quality: VideoQuality) {
