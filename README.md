@@ -34,7 +34,7 @@ KOLSAtest/
 │   │   ├── java/com/vgve/core/
 │   │   │   ├── di/                   # Dependency Injection (Dagger Hilt)
 │   │   │   │   ├── CoreModule.kt
-│   │   │   │   └── NetworkModule.kt
+│   │   │   │   └── NetworkModule.kt  # Retrofit instance creation
 │   │   │   └── utils/extensions/
 │   │   │       └── NetworkExtensions.kt
 │   │   └── AndroidManifest.xml
@@ -51,8 +51,6 @@ KOLSAtest/
 │   │   │   └── presentation/ui/
 │   │   │       └── CustomPlayerView.kt
 │   │   ├── res/                      # Resources
-│   │   │   ├── menu/                 # Popup menu
-│   │   │   └── ...
 │   │   └── AndroidManifest.xml
 │   └── build.gradle.kts              # Module Dependencies
 ├── workouts/                         # Feaure Module
@@ -62,23 +60,14 @@ KOLSAtest/
 │   │   │   │   └── WorkoutsModule.kt
 │   │   │   ├── data/
 │   │   │   │   ├── models/
-│   │   │   │   ├── repository/
-│   │   │   │   └── WorkoutsService.kt
+│   │   │   │   └── repository/
 │   │   │   ├── domain/
 │   │   │   │   ├── models/
 │   │   │   │   └── repository/
 │   │   │   └── presentation/
-│   │   │       ├── workouts/
-│   │   │       │   ├── adapters/     # AdapterDelegates, DiffUtil
-│   │   │       │   ├── WorkoutsFragment.kt
-│   │   │       │   └── WorkoutsViewModel.kt
-│   │   │       └── workoutcard/      
-│   │   │           ├── WorkoutCardFragment.kt
-│   │   │           └── WorkoutCardViewModel.kt
+│   │   │       ├── workouts/         # Workouts Screen: Fragment, ViewModel, adapters
+│   │   │       └── workoutcard/      # Workout Card Screen: Fragment, ViewModel
 │   │   ├── res/                      # Resources
-│   │   │   ├── drawable/             # Vector Assets
-│   │   │   ├── layouts/              # View layouts
-│   │   │   └── ...
 │   │   └── AndroidManifest.xml
 │   └── build.gradle.kts
 ├── build.gradle.kts                  # Project-level Config
