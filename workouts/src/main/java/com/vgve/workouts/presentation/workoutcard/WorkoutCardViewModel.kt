@@ -18,6 +18,7 @@ import com.vgve.workouts.presentation.utils.extensions.launchSafe
 import com.vgve.workouts.presentation.utils.extensions.track
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,21 +39,42 @@ class WorkoutCardViewModel @Inject constructor(
         const val KEY_ARGS_WORKOUT = "args_workout"
     }
 
-    private val _uiState = MutableStateFlow(UIState())
+    private val _uiState = MutableStateFlow(WorkoutCardState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiAction: Channel<UIAction> = Channel()
-    val uiAction = _uiAction.receiveAsFlow()
+    private val _effect: Channel<WorkoutCardEffect> = Channel()
+    val effect: Flow<WorkoutCardEffect> = _effect.receiveAsFlow()
 
     init {
-        initScreen()
+        handleIntent(WorkoutCardIntent.InitialLoad)
     }
 
-    fun initScreen() {
+    fun handleIntent(intent: WorkoutCardIntent) {
+        when (intent) {
+            is WorkoutCardIntent.InitialLoad -> loadWorkoutData()
+            is WorkoutCardIntent.PlayerAction -> handlePlayerAction(intent.action)
+            is WorkoutCardIntent.SetPlaybackSpeed -> setSpeed(intent.speed)
+            is WorkoutCardIntent.SetVideoQuality -> setQuality(intent.quality)
+            is WorkoutCardIntent.RestorePlayer -> restorePlayer(intent.isReady)
+        }
+    }
+
+    private fun handlePlayerAction(action: PlayerAction) {
+        when (action) {
+            PlayerAction.Play -> videoPlayerService.resume()
+            PlayerAction.Pause -> videoPlayerService.pause()
+            PlayerAction.Rewind -> videoPlayerService.rewind()
+            PlayerAction.Forward -> videoPlayerService.forward()
+            PlayerAction.Mute -> videoPlayerService.mute()
+            PlayerAction.Replay -> videoPlayerService.replay()
+        }
+    }
+
+    private fun loadWorkoutData() {
         launchSafe(
             errorHandler = { exception ->
-                Log.e(TAG, "$exception")
-                viewModelScope.launch { _uiAction.send(UIAction.OnFailure) }
+                Log.e(TAG, "Error loading workout data", exception)
+                viewModelScope.launch { _effect.send(WorkoutCardEffect.LoadFailed) }
             },
         ) {
             val workout = savedStateHandle.get<WorkoutModel>(KEY_ARGS_WORKOUT)
@@ -81,14 +103,7 @@ class WorkoutCardViewModel @Inject constructor(
         }
     }
 
-    fun onRewind() = videoPlayerService.rewind()
-    fun onForward() = videoPlayerService.forward()
-    fun onPlay() = videoPlayerService.resume()
-    fun onPause() = videoPlayerService.pause()
-    fun onMute() = videoPlayerService.mute()
-    fun onReplay() = videoPlayerService.replay()
-
-    fun onRestore(isReady: Boolean) {
+    private fun restorePlayer(isReady: Boolean) {
         videoPlayerService.restore(isReady)
     }
 
@@ -103,7 +118,7 @@ class WorkoutCardViewModel @Inject constructor(
         videoPlayerService.release()
     }
 
-    data class UIState(
+    data class WorkoutCardState(
         val isLoading: Boolean = false,
         val workout: WorkoutModel? = null,
         val videoWorkout: VideoWorkoutModel? = null,
@@ -111,7 +126,19 @@ class WorkoutCardViewModel @Inject constructor(
         val playerState: PlayerModel? = null
     )
 
-    sealed class UIAction {
-        data object OnFailure : UIAction()
+    sealed class WorkoutCardIntent {
+        data object InitialLoad : WorkoutCardIntent()
+        data class PlayerAction(val action: WorkoutCardViewModel.PlayerAction) : WorkoutCardIntent()
+        data class SetPlaybackSpeed(val speed: Speed) : WorkoutCardIntent()
+        data class SetVideoQuality(val quality: VideoQuality?) : WorkoutCardIntent()
+        data class RestorePlayer(val isReady: Boolean) : WorkoutCardIntent()
+    }
+
+    enum class PlayerAction {
+        Play, Pause, Rewind, Forward, Mute, Replay
+    }
+
+    sealed class WorkoutCardEffect {
+        data object LoadFailed : WorkoutCardEffect()
     }
 }

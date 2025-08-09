@@ -34,116 +34,125 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeUIState()
-        observeUIAction()
+        setupViews()
+        observeState()
+        observeEffects()
     }
 
-    private fun observeUIState() = viewModel.uiState.onEach { uiState ->
+    private fun setupViews() {
         with(binding) {
-            // Toolbar
-            toolbar.apply {
-                ivBack.setOnClickListener {
-                    findNavController().popBackStack()
-                }
-                tvToolbarTitle.text = uiState.workout?.title
+            // Toolbar setup
+            toolbar.ivBack.setOnClickListener {
+                findNavController().popBackStack()
             }
 
-            // Info
-            tvDescription.apply {
-                isVisible = !uiState.workout?.description.isNullOrEmpty()
-                text = uiState.workout?.description
-            }
-            tvType.text = uiState.workout?.type?.toResString()?.let { getString(it) }
-            tvDuration.apply {
-                isVisible = uiState.videoWorkout?.duration?.isInteger() ?: false
-                text = getString(R.string.duration_minutes, uiState.videoWorkout?.duration)
-            }
-
-            // Progress bar
-            clMain.isVisible = !uiState.isLoading
-            pbWorkoutCard.isVisible = uiState.isLoading
-
-            // Player
-            pvWorkout.apply {
-                isVisible = !uiState.isLoading
-                uiState.player?.let {
-                    setPlayer(it)
-                }
-            }
-
-            // Custom controllers
-            pvWorkout.play.apply {
-                pvWorkout.setPlayResource(uiState.playerState?.isPlaying == true)
-                isVisible = uiState.playerState?.isEnded == false
-                setOnClickListener {
-                    if (uiState.playerState?.isPlaying == true) viewModel.onPause()
-                    else viewModel.onPlay()
-                }
-            }
-            pvWorkout.replay.apply {
-                isVisible = uiState.playerState?.isEnded == true
-                setOnClickListener {
-                    viewModel.onReplay()
-                }
-            }
-            pvWorkout.mute.apply {
-                isEnabled = uiState.playerState?.isEnded == false
-                pvWorkout.setMuteResource(uiState.playerState?.isMute == true)
-                setOnClickListener {
-                    viewModel.onMute()
-                }
-            }
-            pvWorkout.forward.apply {
-                isVisible = uiState.playerState?.isEnded == false
-                setOnClickListener {
-                    viewModel.onForward()
-                }
-            }
-            pvWorkout.rewind.apply {
-                isVisible = uiState.playerState?.isEnded == false
-                setOnClickListener {
-                    viewModel.onRewind()
-                }
-            }
-            pvWorkout.settings.setOnClickListener {
-                showSettingsPopup(
-                    view = pvWorkout.settings,
-                    onClick = { type ->
-                        when(type) {
-                            SettingsType.QUALITY -> {
-                                showQualityPopup(
-                                    view = pvWorkout.settings,
-                                    resolutions = uiState.playerState?.availableQualities,
-                                    onClick = {
-                                        viewModel.setQuality(it)
-                                    }
-                                )
-                            }
-                            SettingsType.SPEED -> {
-                                showSpeedPopup(
-                                    view = pvWorkout.settings,
-                                    onClick = {
-                                        viewModel.setSpeed(speed = it)
-                                    }
-                                )
-                            }
-                            else -> {}
-                        }
-                    }
+            // Player controls setup
+            // Play
+            pvWorkout.play.setOnClickListener {
+                viewModel.handleIntent(
+                    WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                        WorkoutCardViewModel.PlayerAction.Play
+                    )
                 )
             }
-        }
-    }.collectOnStarted(this)
 
-    private fun observeUIAction() {
-        viewModel.uiAction.onEach { uiAction ->
-            when(uiAction) {
-                is WorkoutCardViewModel.UIAction.OnFailure -> {
+            // Replay
+            pvWorkout.replay.setOnClickListener {
+                viewModel.handleIntent(
+                    WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                        WorkoutCardViewModel.PlayerAction.Replay
+                    )
+                )
+            }
+
+            // Mute
+            pvWorkout.mute.setOnClickListener {
+                viewModel.handleIntent(
+                    WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                        WorkoutCardViewModel.PlayerAction.Mute
+                    )
+                )
+            }
+
+            // Forward
+            pvWorkout.forward.setOnClickListener {
+                viewModel.handleIntent(
+                    WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                        WorkoutCardViewModel.PlayerAction.Forward
+                    )
+                )
+            }
+
+            // Rewind
+            pvWorkout.rewind.setOnClickListener {
+                viewModel.handleIntent(
+                    WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                        WorkoutCardViewModel.PlayerAction.Rewind
+                    )
+                )
+            }
+
+            // Settings
+            pvWorkout.settings.setOnClickListener {
+                showSettingsMenu()
+            }
+        }
+    }
+
+    private fun observeState() {
+        viewModel.uiState.onEach { state ->
+            with(binding) {
+                // Update toolbar
+                toolbar.tvToolbarTitle.text = state.workout?.title
+
+                // Update workout info
+                tvDescription.apply {
+                    isVisible = !state.workout?.description.isNullOrEmpty()
+                    text = state.workout?.description
+                }
+                tvType.text = state.workout?.type?.toResString()?.let { getString(it) }
+                tvDuration.apply {
+                    isVisible = state.videoWorkout?.duration?.isInteger() ?: false
+                    text = getString(R.string.duration_minutes, state.videoWorkout?.duration)
+                }
+
+                // Update loading state
+                clMain.isVisible = !state.isLoading
+                pbWorkoutCard.isVisible = state.isLoading
+
+                // Update player
+                pvWorkout.apply {
+                    isVisible = !state.isLoading
+                    state.player?.let { player ->
+                        setPlayer(player)
+                    }
+                }
+
+                // Update player controls
+                with(binding.pvWorkout) {
+                    setPlayResource(state.playerState?.isPlaying == true)
+                    play.isVisible = state.playerState?.isEnded == false
+                    replay.isVisible = state.playerState?.isEnded == true
+                    mute.isEnabled = state.playerState?.isEnded == false
+                    setMuteResource(state.playerState?.isMute == true)
+                    forward.isVisible = state.playerState?.isEnded == false
+                    rewind.isVisible = state.playerState?.isEnded == false
+                }
+            }
+        }.collectOnStarted(this)
+    }
+
+    private fun observeEffects() {
+        viewModel.effect.onEach { effect ->
+            when(effect) {
+                WorkoutCardViewModel.WorkoutCardEffect.LoadFailed -> {
                     showBottomSheet(
                         title = getString(R.string.common_error_title),
                         subTitle = getString(R.string.common_error_subtitle),
                         btnTitle = getString(R.string.common_error_btn),
-                        btnClick = { viewModel.initScreen() },
+                        btnClick = {
+                            viewModel.handleIntent(WorkoutCardViewModel.WorkoutCardIntent.InitialLoad)
+                        },
                         cancelable = false
                     )
                 }
@@ -151,9 +160,47 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
         }.collectOnStarted(this)
     }
 
+    private fun showSettingsMenu() {
+        val currentState = viewModel.uiState.value
+
+        showSettingsPopup(
+            view = binding.pvWorkout.settings,
+            onClick = { type ->
+                when(type) {
+                    SettingsType.QUALITY -> {
+                        showQualityPopup(
+                            view = binding.pvWorkout.settings,
+                            resolutions = currentState.playerState?.availableQualities,
+                            onClick = {
+                                viewModel.handleIntent(
+                                    WorkoutCardViewModel.WorkoutCardIntent.SetVideoQuality(it)
+                                )
+                            }
+                        )
+                    }
+                    SettingsType.SPEED -> {
+                        showSpeedPopup(
+                            view = binding.pvWorkout.settings,
+                            onClick = {
+                                viewModel.handleIntent(
+                                    WorkoutCardViewModel.WorkoutCardIntent.SetPlaybackSpeed(it)
+                                )
+                            }
+                        )
+                    }
+                    else -> {}
+                }
+            }
+        )
+    }
+
     override fun onStop() {
         super.onStop()
-        viewModel.onPause()
+        viewModel.handleIntent(
+            WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                WorkoutCardViewModel.PlayerAction.Pause
+            )
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -163,14 +210,20 @@ class WorkoutCardFragment: Fragment(R.layout.fragment_workout_card) {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            viewModel.onRestore(
-                savedInstanceState.getBoolean(KEY_PLAYER_PLAY_WHEN_READY)
+            viewModel.handleIntent(
+                WorkoutCardViewModel.WorkoutCardIntent.RestorePlayer(
+                    savedInstanceState.getBoolean(KEY_PLAYER_PLAY_WHEN_READY)
+                )
             )
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.onPause()
+        viewModel.handleIntent(
+            WorkoutCardViewModel.WorkoutCardIntent.PlayerAction(
+                WorkoutCardViewModel.PlayerAction.Pause
+            )
+        )
     }
 }
