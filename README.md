@@ -3,6 +3,12 @@
 ## Project Overview
 A clean architecture Android application showcasing workout videos with seamless playback experience. This implementation demonstrates modern Android development best practices and modular app architecture.
 
+Note on functionality:  
+⚠️ The workout API service this app depended on is no longer available (external circumstances). While the app can't fetch live data, the codebase fully represents:  
+✅ My current technical capabilities  
+✅ Production-grade architecture decisions  
+✅ Best practices in Android development
+
 ## Tech Stack
 - Language: Kotlin
 - Architecture: Clean Architecture + MVI, Single Activity
